@@ -1,0 +1,14 @@
+{
+  "include": [
+    "src/**/*"
+  ],
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "outDir": "dist",
+    "strictNullChecks": true,
+    "target": "ES2020"
+  }
+}
