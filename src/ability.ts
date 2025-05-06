@@ -1,4 +1,6 @@
-const abilityMap = new Map<string, string>([
+import { PokemonAbility, RawAbility } from "./types";
+
+const abilityMap: Map<string, string> = new Map<string, string>([
   ["あくしゅう", "Stench"],
   ["あめふらし", "Drizzle"],
   ["かそく", "Speed Boost"],
@@ -308,12 +310,6 @@ const abilityMap = new Map<string, string>([
   ["どくくぐつ", "Poison Puppeteer"],
 ]);
 
-interface PokemonAbility {
-  name: string;
-  hidden: boolean;
-  terastallised?: boolean;
-}
-
 const abilityName = (name: string, lang: string): string => {
   if (lang === "ja") {
     return name;
@@ -328,7 +324,10 @@ const abilityName = (name: string, lang: string): string => {
   throw new Error(`Unsupported language: ${lang}`);
 };
 
-export const getAbility = (ability: any[], lang: string): PokemonAbility[] => {
+export const getAbility = (
+  ability: RawAbility[],
+  lang: string
+): PokemonAbility[] => {
   const abilities: PokemonAbility[] = [];
   for (const a of ability) {
     let hidden: boolean;

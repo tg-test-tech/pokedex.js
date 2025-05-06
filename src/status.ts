@@ -1,3 +1,5 @@
+import { PokemonStatus } from "./types";
+
 export class Status {
   H: string;
   A: string;
@@ -6,7 +8,7 @@ export class Status {
   D: string;
   S: string;
 
-  constructor(status) {
+  constructor(status: PokemonStatus) {
     this.H = status.H;
     this.A = status.A;
     this.B = status.B;

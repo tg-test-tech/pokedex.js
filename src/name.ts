@@ -1,24 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-
-interface NameData {
-  id: string;
-  name: {
-    ja: string;
-    en: string;
-  };
-}
-
-interface FormNameData {
-  id: number;
-  names: FormName[];
-}
-
-interface FormName {
-  formId: string;
-  ja: string;
-  en: string;
-}
+import { NameData, FormNameData } from "./types";
 
 // Use glob pattern to load all name JSON files
 const jsons: NameData[] = (() => {
@@ -29,61 +11,90 @@ const jsons: NameData[] = (() => {
       file.match(/^(gen\d+(_[A-Za-z]+)?_name\.json|mega_name\.json)$/)
     );
 
-  let allNames: NameData[] = [];
-
-  for (const file of nameFiles) {
-    // Load data from each file and concatenate
-    const data = require(`./resources/pokemon/${file}`);
-    allNames = allNames.concat(data);
-  }
-
-  return allNames;
+  return nameFiles.flatMap((file) => {
+    const filePath = path.join(resourcePath, file);
+    return JSON.parse(fs.readFileSync(filePath, "utf8")) as NameData[];
+  });
 })();
-const nameMap = new Map<string, { ja: string; en: string }>(
-  jsons.map((obj) => [obj.id, obj.name])
+
+// Get form name data
+const formNameData: FormNameData[] = (() => {
+  const resourcePath = path.join(__dirname, "resources", "pokemon");
+  const nameFiles = fs
+    .readdirSync(resourcePath)
+    .filter((file) => file.match(/^form(_\d+)?(_[A-Za-z]+)?_name\.json$/));
+
+  return nameFiles.flatMap((file) => {
+    const filePath = path.join(resourcePath, file);
+    return JSON.parse(fs.readFileSync(filePath, "utf8")) as FormNameData[];
+  });
+})();
+
+// Create a map of pokemon id to name data for efficient lookup
+const nameMap: Map<string, NameData> = new Map(
+  jsons.map((data) => [data.id, data])
 );
 
-const formNameJson: FormNameData[] = require("./resources/pokemon/form_name.json");
-const formNameMap = new Map<string, FormName[]>(
-  formNameJson.map((obj) => [obj.id.toString(), obj.names])
+// Create a map of pokemon id to form name data for efficient lookup
+const formNameMap: Map<number, FormNameData> = new Map(
+  formNameData.map((data) => [data.id, data])
 );
 
+/**
+ * Get the name of a Pokemon
+ * @param id Pokemon ID
+ * @param lang Language (ja or en)
+ * @returns Pokemon name
+ */
 export const getName = (id: string, lang: string): string => {
-  const name = nameMap.get(id);
-  if (!name) {
-    throw new Error(`Name not found for id: ${id}`);
+  const data = nameMap.get(id);
+  if (!data) {
+    throw new Error(`Pokemon not found with id: ${id}`);
   }
 
-  if (lang === "ja") {
-    return name.ja;
-  } else if (lang === "en") {
-    return name.en;
+  switch (lang) {
+    case "ja":
+      return data.name.ja;
+    case "en":
+      return data.name.en;
+    default:
+      throw new Error(`Unsupported language: ${lang}`);
   }
-
-  throw new Error(`Unsupported language: ${lang}`);
 };
 
+/**
+ * Get the form name of a Pokemon
+ * @param id Pokemon ID
+ * @param formId Form ID
+ * @param lang Language (ja or en)
+ * @returns Form name
+ */
 export const getFormName = (
   id: string,
   formId: string,
   lang: string
 ): string => {
-  const names = formNameMap.get(id);
-  if (names === undefined) {
-    throw new Error(`Undefined: ${id}, ${formId}, ${lang}`);
-  }
-  const name = names.find((n) => {
-    return n.formId === formId;
-  });
-  if (!name) {
-    throw new Error(`Form name not found for id: ${id}, formId: ${formId}`);
+  const pokemonId = Number(id);
+  const data = formNameMap.get(pokemonId);
+  if (!data) {
+    throw new Error(
+      `Pokemon not found with id: ${id}, formId: ${formId}, and lang ${lang}`
+    );
   }
 
-  if (lang === "ja") {
-    return name.ja;
-  } else if (lang === "en") {
-    return name.en;
+  const form = data.names.find((name) => name.formId === formId);
+  if (!form) {
+    throw new Error(
+      `Form name not found for id: ${id}, formId: ${formId}, and lang ${lang}`
+    );
   }
 
-  throw new Error(`Unsupported language: ${lang}`);
+  switch (lang) {
+    case "ja":
+      return form.ja;
+    case "en":
+      return form.en;
+    default:
+      throw new Error(`Unsupported language: ${lang}`);
+  }
 };

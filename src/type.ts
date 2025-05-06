@@ -19,6 +19,12 @@ const typeMap = new Map<string, string>([
   ["フェアリー", "Fairy"],
 ]);
 
+/**
+ * Get the type names translated to the specified language
+ * @param type Array of type names in Japanese
+ * @param lang Language (ja or en)
+ * @returns Array of type names in the specified language
+ */
 export const getType = (type: string[], lang: string): string[] => {
   if (lang === "ja") {
     return type;

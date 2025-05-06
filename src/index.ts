@@ -1,4 +1,5 @@
 import { Pokemon } from "./pokemon";
+import { RawPokemonData, StatOperator, SortKey } from "./types";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -16,11 +17,10 @@ const getAll = (lang: string): Pokemon[] => {
   const files = fs
     .readdirSync(resourcePath)
     .filter((file) => file.endsWith(".json") && !file.endsWith("_name.json"));
-  console.log(files);
+  console.log(files)
 
   for (const file of files) {
     // Extract generation number from filename
-
     let genNumber: number;
 
     if (file.startsWith("gen")) {
@@ -40,15 +40,16 @@ const getAll = (lang: string): Pokemon[] => {
     }
 
     // Load the data and create Pokemon objects
-    const pokemonData = require(`./resources/pokemon/${file}`);
+    const pokemonData: RawPokemonData[] = require(`./resources/pokemon/${file}`);
     const pokemonList = pokemonData.map(
-      (p: any) => new Pokemon(p, genNumber, lang)
+      (p: RawPokemonData) => new Pokemon(p, genNumber, lang)
     );
     allPokemon.push(...pokemonList);
   }
 
   return allPokemon;
 };
+
 
 /**
  * A class of a Pokédex.
@@ -82,7 +83,7 @@ class Pokedex {
    * @param {number|string} id ID of Pokémon
    * @return {Pokedex} this instance
    */
-  id(id: number | string): Pokedex {
+  id(id: number | string): this {
     this.poke = this.poke.filter((pokemon) => String(id) === pokemon.id);
     return this;
   }
@@ -93,7 +94,7 @@ class Pokedex {
    * @param {string} name Name of Pokémon
    * @return {Pokedex} this instance
    */
-  name(name: string): Pokedex {
+  name(name: string): this {
     this.poke = this.poke.filter((pokemon) => name === pokemon.name);
     return this;
   }
@@ -104,7 +105,7 @@ class Pokedex {
    * @param {string} type Type of Pokémon
    * @return {Pokedex} this instance
    */
-  type(type: string): Pokedex {
+  type(type: string): this {
     this.poke = this.poke.filter((pokemon) => pokemon.type.includes(type));
     return this;
   }
@@ -115,7 +116,7 @@ class Pokedex {
    * @param {string} eggGroup Egg group of Pokémon
    * @return {Pokedex} this instance
    */
-  eggGroup(eggGroup: string): Pokedex {
+  eggGroup(eggGroup: string): this {
     this.poke = this.poke.filter((pokemon) =>
       pokemon.eggGroup.includes(eggGroup)
     );
@@ -129,34 +130,37 @@ class Pokedex {
    * @param {number|string} value value to compare
    * @return {Pokedex} this instance
    */
-  baseStatTotal(operator: string, value: number | string): Pokedex {
+  baseStatTotal(operator: StatOperator, value: number | string): this {
+    const numValue = Number(value);
+
     switch (operator) {
       case ">":
         this.poke = this.poke.filter(
-          (pokemon) => pokemon.baseStats.total > Number(value)
+          (pokemon) => pokemon.baseStats.total > numValue
         );
         break;
       case ">=":
         this.poke = this.poke.filter(
-          (pokemon) => pokemon.baseStats.total >= Number(value)
+          (pokemon) => pokemon.baseStats.total >= numValue
         );
         break;
       case "<":
         this.poke = this.poke.filter(
-          (pokemon) => pokemon.baseStats.total < Number(value)
+          (pokemon) => pokemon.baseStats.total < numValue
         );
         break;
       case "<=":
         this.poke = this.poke.filter(
-          (pokemon) => pokemon.baseStats.total <= Number(value)
+          (pokemon) => pokemon.baseStats.total <= numValue
         );
         break;
       case "=":
         this.poke = this.poke.filter(
-          (pokemon) => pokemon.baseStats.total === Number(value)
+          (pokemon) => pokemon.baseStats.total === numValue
         );
         break;
       default:
+        // This shouldn't happen due to the type, but keeping for runtime safety
         throw new Error(`Invalid operator (${operator}).`);
     }
     return this;
@@ -166,7 +170,7 @@ class Pokedex {
    * Takes Pokémon which can Mega Evolve (including Primal Reversion, Ultra Burst)
    * @return {Pokedex} this instance
    */
-  canMegaEvolve(): Pokedex {
+  canMegaEvolve(): this {
     this.poke = this.poke.filter(
       (pokemon) => pokemon.megaEvolution !== undefined
     );
@@ -179,7 +183,7 @@ class Pokedex {
    * @param {number|string} gen Generation
    * @return {Pokedex} this instance
    */
-  generation(gen: number | string): Pokedex {
+  generation(gen: number | string): this {
     this.poke = this.poke.filter(
       (pokemon) => String(pokemon.generation) === String(gen)
     );
@@ -191,13 +195,14 @@ class Pokedex {
    *
    * @return {Pokedex} this instance
    */
-  inGalarPokedex(): Pokedex {
+  inGalarPokedex(): this {
     this.poke = this.poke.filter(
-      (pokemon) =>
-        pokemon.localId !== undefined && pokemon.localId.galar !== undefined
+      (pokemon) => pokemon.localId?.galar !== undefined
     );
 
-    this.poke.forEach((pokemon) => delete pokemon.megaEvolution);
+    this.poke.forEach((pokemon) => {
+      delete pokemon.megaEvolution;
+    });
 
     return this;
   }
@@ -208,7 +213,7 @@ class Pokedex {
    * @param {string} sortKey - one of "NationalNumber" or "Lexicographical"
    * @return {Pokedex} this instance
    */
-  sort(sortKey: string): Pokedex {
+  sort(sortKey: SortKey): this {
     switch (sortKey) {
       case "Lexicographical":
         this.poke.sort((a, b) => a.compareName(b));
@@ -217,6 +222,7 @@ class Pokedex {
         this.poke.sort((a, b) => a.compareId(b));
         break;
       default:
+        // This shouldn't happen due to the type, but keeping for runtime safety
         throw new Error(`Invalid sortKey (${sortKey}).`);
     }
     return this;

@@ -16,6 +16,12 @@ const eggGroupMap = new Map<string, string>([
   ["タマゴ未発見", "Undiscovered"],
 ]);
 
+/**
+ * Get the egg group names translated to the specified language
+ * @param group Array of egg group names in Japanese
+ * @param lang Language (ja or en)
+ * @returns Array of egg group names in the specified language
+ */
 export const getEggGroup = (group: string[], lang: string): string[] => {
   if (lang === "ja") {
     return group;

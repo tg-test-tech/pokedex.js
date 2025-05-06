@@ -3,34 +3,31 @@ import { getName, getFormName } from "./name";
 import { getType } from "./type";
 import { getAbility } from "./ability";
 import { Status } from "./status";
+import {
+  PokemonAbility,
+  RawPokemonData,
+  LocalId,
+  MegaPokemonData,
+  MegaPokemon as MegaPokemonType,
+  MegaPokemonMap,
+} from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const megaPokemonJson = require("./resources/pokemon/mega.json");
-
-type localId = {
-  galar?: string;
-  paldea?: string;
-};
-
-type PokemonAbility = {
-  name: string;
-  hidden: boolean;
-  terastallised?: boolean;
-};
+const megaPokemonJson: MegaPokemonMap = require("./resources/pokemon/mega.json");
 
 export class Pokemon {
   id: string;
   name: string;
   formName?: string;
-  localId?: localId;
+  localId?: LocalId;
   type: string[];
   ability: PokemonAbility[];
   eggGroup: string[];
   baseStats: Status;
-  megaEvolution?: MegaPokemon[];
+  megaEvolution?: MegaPokemonType[];
   generation: number;
 
-  constructor(pokemon: any, gen: number, lang: string) {
+  constructor(pokemon: RawPokemonData, gen: number, lang: string) {
     this.id = pokemon.id;
     if (pokemon.formId !== undefined) {
       this.formName = getFormName(this.id, pokemon.formId, lang);
@@ -115,7 +112,7 @@ class MegaPokemon {
   ability: PokemonAbility[];
   baseStats: Status;
 
-  constructor(pokemon: any, lang: string) {
+  constructor(pokemon: MegaPokemonData, lang: string) {
     this.name = getName(pokemon.id, lang);
     this.type = getType(pokemon.type, lang);
     this.ability = getAbility(pokemon.abilities, lang);
