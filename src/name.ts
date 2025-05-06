@@ -1,3 +1,6 @@
+import * as fs from "fs";
+import * as path from "path";
+
 interface NameData {
   id: string;
   name: {
@@ -17,19 +20,25 @@ interface FormName {
   en: string;
 }
 
-const jsons: NameData[] = [].concat(
-  require("./resources/pokemon/gen1_name.json"),
-  require("./resources/pokemon/gen2_name.json"),
-  require("./resources/pokemon/gen3_name.json"),
-  require("./resources/pokemon/gen4_name.json"),
-  require("./resources/pokemon/gen5_name.json"),
-  require("./resources/pokemon/gen6_name.json"),
-  require("./resources/pokemon/gen7_name.json"),
-  require("./resources/pokemon/gen8_name.json"),
-  require("./resources/pokemon/gen8_LegendsArceus_name.json"),
-  require("./resources/pokemon/gen9_name.json"),
-  require("./resources/pokemon/mega_name.json")
-);
+// Use glob pattern to load all name JSON files
+const jsons: NameData[] = (() => {
+  const resourcePath = path.join(__dirname, "resources", "pokemon");
+  const nameFiles = fs
+    .readdirSync(resourcePath)
+    .filter((file) =>
+      file.match(/^(gen\d+(_[A-Za-z]+)?_name\.json|mega_name\.json)$/)
+    );
+
+  let allNames: NameData[] = [];
+
+  for (const file of nameFiles) {
+    // Load data from each file and concatenate
+    const data = require(`./resources/pokemon/${file}`);
+    allNames = allNames.concat(data);
+  }
+
+  return allNames;
+})();
 const nameMap = new Map<string, { ja: string; en: string }>(
   jsons.map((obj) => [obj.id, obj.name])
 );
