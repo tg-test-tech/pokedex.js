@@ -1,5 +1,5 @@
 import { Pokemon } from "./pokemon";
-import { RawPokemonData, StatOperator, SortKey } from "./types";
+import type { RawPokemonData, StatOperator, SortKey } from "./types";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -17,7 +17,7 @@ const getAll = (lang: string): Pokemon[] => {
   const files = fs
     .readdirSync(resourcePath)
     .filter((file) => file.endsWith(".json") && !file.endsWith("_name.json"));
-  console.log(files)
+  console.log(files);
 
   for (const file of files) {
     // Extract generation number from filename
@@ -26,21 +26,23 @@ const getAll = (lang: string): Pokemon[] => {
     if (file.startsWith("gen")) {
       // Handle regular generation files (gen1.json, gen2.json, etc.)
       const match = file.match(/gen(\d+)/);
-      genNumber = match ? Number(match[1]) : 1;
+      genNumber = match !== null ? Number(match[1]) : 1;
     } else if (file.includes("LegendsArceus")) {
       // Handle Legends Arceus files
       genNumber = 8;
     } else if (file.startsWith("form_")) {
       // Handle form files (form_3.json, form_4.json, etc.)
       const match = file.match(/form_(\d+)/);
-      genNumber = match ? Number(match[1]) : 1;
+      genNumber = match !== null ? Number(match[1]) : 1;
     } else {
       // Skip any other files
       continue;
     }
 
     // Load the data and create Pokemon objects
-    const pokemonData: RawPokemonData[] = require(`./resources/pokemon/${file}`);
+    const filePath = path.join(resourcePath, file);
+    const raw = fs.readFileSync(filePath, "utf8");
+    const pokemonData = JSON.parse(raw) as RawPokemonData[];
     const pokemonList = pokemonData.map(
       (p: RawPokemonData) => new Pokemon(p, genNumber, lang)
     );
@@ -49,7 +51,6 @@ const getAll = (lang: string): Pokemon[] => {
 
   return allPokemon;
 };
-
 
 /**
  * A class of a Pokédex.
@@ -65,7 +66,7 @@ class Pokedex {
    * @param {String} [lang=ja] language ('en' or 'ja', defaults to 'ja')
    */
   constructor(lang?: string) {
-    if (!lang) {
+    if (lang === undefined) {
       this.lang = "ja";
     } else if (lang === "ja" || lang === "en") {
       this.lang = lang;
@@ -161,7 +162,7 @@ class Pokedex {
         break;
       default:
         // This shouldn't happen due to the type, but keeping for runtime safety
-        throw new Error(`Invalid operator (${operator}).`);
+        throw new Error(`Invalid operator (${String(operator)}).`);
     }
     return this;
   }
@@ -223,7 +224,7 @@ class Pokedex {
         break;
       default:
         // This shouldn't happen due to the type, but keeping for runtime safety
-        throw new Error(`Invalid sortKey (${sortKey}).`);
+        throw new Error(`Invalid sortKey (${String(sortKey)}).`);
     }
     return this;
   }

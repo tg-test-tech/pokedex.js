@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { NameData, FormNameData } from "./types";
+import type { NameData, FormNameData } from "./types";
 
 // Use glob pattern to load all name JSON files
 const jsons: NameData[] = (() => {
@@ -31,12 +31,12 @@ const formNameData: FormNameData[] = (() => {
 })();
 
 // Create a map of pokemon id to name data for efficient lookup
-const nameMap: Map<string, NameData> = new Map(
+const nameMap: Map<string, NameData> = new Map<string, NameData>(
   jsons.map((data) => [data.id, data])
 );
 
 // Create a map of pokemon id to form name data for efficient lookup
-const formNameMap: Map<number, FormNameData> = new Map(
+const formNameMap: Map<number, FormNameData> = new Map<number, FormNameData>(
   formNameData.map((data) => [data.id, data])
 );
 
@@ -48,7 +48,7 @@ const formNameMap: Map<number, FormNameData> = new Map(
  */
 export const getName = (id: string, lang: string): string => {
   const data = nameMap.get(id);
-  if (!data) {
+  if (data === undefined) {
     throw new Error(`Pokemon not found with id: ${id}`);
   }
 
@@ -76,14 +76,14 @@ export const getFormName = (
 ): string => {
   const pokemonId = Number(id);
   const data = formNameMap.get(pokemonId);
-  if (!data) {
+  if (data === undefined) {
     throw new Error(
       `Pokemon not found with id: ${id}, formId: ${formId}, and lang ${lang}`
     );
   }
 
   const form = data.names.find((name) => name.formId === formId);
-  if (!form) {
+  if (form === undefined) {
     throw new Error(
       `Form name not found for id: ${id}, formId: ${formId}, and lang ${lang}`
     );

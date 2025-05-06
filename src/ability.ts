@@ -1,4 +1,4 @@
-import { PokemonAbility, RawAbility } from "./types";
+import type { PokemonAbility, RawAbility } from "./types";
 
 const abilityMap: Map<string, string> = new Map<string, string>([
   ["あくしゅう", "Stench"],

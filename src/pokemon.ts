@@ -3,13 +3,13 @@ import { getName, getFormName } from "./name";
 import { getType } from "./type";
 import { getAbility } from "./ability";
 import { Status } from "./status";
-import {
+import type {
   PokemonAbility,
   RawPokemonData,
   LocalId,
   MegaPokemonData,
   MegaPokemon as MegaPokemonType,
-  MegaPokemonMap,
+  MegaPokemonMap
 } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -48,7 +48,7 @@ export class Pokemon {
     this.eggGroup = getEggGroup(pokemon.egg_groups, lang);
     this.baseStats = new Status(pokemon.status);
 
-    if (pokemon.mega_evolve !== undefined && pokemon.mega_evolve === true) {
+    if (pokemon.mega_evolve !== undefined) {
       this.megaEvolution = megaPokemonJson[pokemon.id].map(
         (mega) => new MegaPokemon(mega, lang)
       );

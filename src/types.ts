@@ -1,82 +1,82 @@
 /**
- * Common interfaces and types for the Pokedex application
+ * Common types and types for the Pokedex application
  */
 
 /**
- * JSON‐loading interfaces for names and forms
+ * JSON‐loading types for names and forms
  */
-export interface NameData {
+export type NameData = {
   id: string;
   name: {
     ja: string;
     en: string;
   };
-}
+};
 
-export interface FormName {
+export type FormName = {
   formId: string;
   ja: string;
   en: string;
-}
+};
 
-export interface FormNameData {
+export type FormNameData = {
   id: number;
   names: FormName[];
-}
+};
 
 /**
- * Interface representing a Pokémon’s base statistics
+ * type representing a Pokémon’s base statistics
  */
-export interface PokemonStatus {
+export type PokemonStatus = {
   H: string; // HP
   A: string; // Attack
   B: string; // Defense
   C: string; // Special Attack
   D: string; // Special Defense
   S: string; // Speed
-}
+};
 
 /**
- * Interface representing a Pokémon’s ability
+ * type representing a Pokémon’s ability
  */
-export interface PokemonAbility {
+export type PokemonAbility = {
   name: string;
   hidden: boolean;
   terastallised?: boolean;
-}
+};
 
 /**
- * Interface representing a Pokémon’s raw ability data from JSON
+ * type representing a Pokémon’s raw ability data from JSON
  */
-export interface RawAbility {
+export type RawAbility = {
   name: string; // Name might start with "*" to indicate hidden ability
   terastallised?: boolean;
-}
+};
 
 /**
- * Interface representing a Pokémon’s regional ID information
+ * type representing a Pokémon’s regional ID information
  */
-export interface LocalId {
+export type LocalId = {
   galar?: string;
   paldea?: string;
-}
+};
 
 /**
- * Interface representing a Mega Evolution of a Pokémon
+ * type representing a Mega Evolution of a Pokémon
  */
-export interface MegaPokemonData {
+export type MegaPokemonData = {
   id: string;
   name: string;
   type: string[];
   abilities: RawAbility[];
   status: PokemonStatus;
   egg_groups: string[];
-}
+};
 
 /**
- * Interface for an initialized Mega Pokémon
+ * type for an initialized Mega Pokémon
  */
-export interface MegaPokemon {
+export type MegaPokemon = {
   name: string;
   type: string[];
   ability: PokemonAbility[];
@@ -89,12 +89,12 @@ export interface MegaPokemon {
     S: string;
     total: number;
   };
-}
+};
 
 /**
- * Interface representing raw Pokémon data from JSON
+ * type representing raw Pokémon data from JSON
  */
-export interface RawPokemonData {
+export type RawPokemonData = {
   id: string;
   name: string;
   formId?: string;
@@ -104,14 +104,12 @@ export interface RawPokemonData {
   status: PokemonStatus;
   egg_groups: string[];
   mega_evolve?: boolean;
-}
+};
 
 /**
  * Type for the mega Pokémon mapping
  */
-export interface MegaPokemonMap {
-  [pokemonId: string]: MegaPokemonData[];
-}
+export type MegaPokemonMap = Record<string, MegaPokemonData[]>;
 
 /**
  * Valid operators for base stat total comparison

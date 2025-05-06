@@ -28,7 +28,7 @@ export const getEggGroup = (group: string[], lang: string): string[] => {
   } else if (lang === "en") {
     return group.map((g) => {
       const englishGroup = eggGroupMap.get(g);
-      if (!englishGroup) {
+      if (englishGroup === undefined) {
         throw new Error(`Egg group translation not found for: ${g}`);
       }
       return englishGroup;

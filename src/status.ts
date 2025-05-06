@@ -1,4 +1,4 @@
-import { PokemonStatus } from "./types";
+import type { PokemonStatus } from "./types";
 
 export class Status {
   H: string;

@@ -31,7 +31,7 @@ export const getType = (type: string[], lang: string): string[] => {
   } else if (lang === "en") {
     return type.map((t) => {
       const englishType = typeMap.get(t);
-      if (!englishType) {
+      if (englishType === undefined) {
         throw new Error(`Type translation not found for: ${t}`);
       }
       return englishType;
