@@ -79,10 +79,7 @@
     },
     "ability": {
       "type": "object",
-      "required": [
-        "name",
-        "hidden"
-      ],
+      "required": ["name", "hidden"],
       "properties": {
         "name": {
           "type": "string",
@@ -100,14 +97,7 @@
     },
     "baseStats": {
       "type": "object",
-      "required": [
-        "H",
-        "A",
-        "B",
-        "C",
-        "D",
-        "S"
-      ],
+      "required": ["H", "A", "B", "C", "D", "S"],
       "properties": {
         "H": {
           "type": "string",
@@ -137,12 +127,7 @@
     },
     "megaPokemon": {
       "type": "object",
-      "required": [
-        "name",
-        "ability",
-        "baseStats",
-        "type"
-      ],
+      "required": ["name", "ability", "baseStats", "type"],
       "properties": {
         "name": {
           "type": "string"
