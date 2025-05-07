@@ -1,6 +1,6 @@
-const expect = require("chai").expect;
+import { expect } from "chai";
+import { getAbility } from "../src/ability";
 
-const ability = require("../src/ability");
 describe("Ability class", () => {
   it("test ability", () => {
     const abilities = [
@@ -12,7 +12,7 @@ describe("Ability class", () => {
       },
     ];
 
-    const actual = ability.getAbility(abilities);
+    const actual = getAbility(abilities, "ja");
     expect(actual).to.have.length(2);
   });
 });

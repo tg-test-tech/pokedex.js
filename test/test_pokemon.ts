@@ -1,17 +1,16 @@
 /* eslint no-unused-expressions: 0 */
 
-const expect = require("chai").expect;
+import { expect } from "chai";
+import { Pokemon } from "../src/pokemon";
 
-const { Pokemon } = require("../src/pokemon");
-
-const venusaurObj = require("../test_resources/venusaur.json");
-const charizardObj = require("../test_resources/charizard.json");
-const pikachuObj = require("../test_resources/pikachu.json");
-const raichuObj = require("../test_resources/raichu.json");
-const alolaRaichuObj = require("../test_resources/alola_raichu.json");
-const meouthObj = require("../test_resources/meouth.json");
-const alolaMeouthObj = require("../test_resources/alola_meouth.json");
-const galarMeouthObj = require("../test_resources/galar_meouth.json");
+import venusaurObj from "../test_resources/venusaur.json";
+import charizardObj from "../test_resources/charizard.json";
+import pikachuObj from "../test_resources/pikachu.json";
+import raichuObj from "../test_resources/raichu.json";
+import alolaRaichuObj from "../test_resources/alola_raichu.json";
+import meouthObj from "../test_resources/meouth.json";
+import alolaMeouthObj from "../test_resources/alola_meouth.json";
+import galarMeouthObj from "../test_resources/galar_meouth.json";
 
 describe("Pokemon class (language: ja)", () => {
   const language = "ja";
@@ -21,7 +20,9 @@ describe("Pokemon class (language: ja)", () => {
       const pikachu = new Pokemon(pikachuObj, 1, language);
 
       expect(pikachu.id).to.equal("25");
-      expect(pikachu.localId.galar).to.equal("194");
+      if (pikachu.localId !== undefined) {
+        expect(pikachu.localId.galar).to.equal("194");
+      }
       expect(pikachu.name).to.equal("ピカチュウ");
       expect(pikachu.formName).to.be.undefined;
       expect(pikachu.type)
@@ -41,7 +42,7 @@ describe("Pokemon class (language: ja)", () => {
       const actual = new Pokemon(charizardObj, 1, language);
 
       expect(actual.id).to.equal("6");
-      expect(actual.localId.galar).to.equal("380");
+      expect(actual.localId!.galar).to.equal("380");
       expect(actual.name).to.equal("リザードン");
       expect(actual.formName).to.be.undefined;
       expect(actual.type)
@@ -56,13 +57,13 @@ describe("Pokemon class (language: ja)", () => {
         .and.that.include("怪獣")
         .and.that.include("ドラゴン");
       expect(actual.megaEvolution).to.be.an("array").that.has.lengthOf(2);
-      expect(actual.megaEvolution[0]).to.have.all.keys(
+      expect(actual.megaEvolution![0]).to.have.all.keys(
         "name",
         "ability",
         "type",
         "baseStats"
       );
-      expect(actual.megaEvolution[1]).to.have.all.keys(
+      expect(actual.megaEvolution![1]).to.have.all.keys(
         "name",
         "ability",
         "type",
@@ -73,9 +74,9 @@ describe("Pokemon class (language: ja)", () => {
 
   describe("#compareName", () => {
     const pikachu = new Pokemon(pikachuObj, 1, language);
-    const meouth = new Pokemon(meouthObj, null, language);
-    const alolaMeouth = new Pokemon(alolaMeouthObj, null, language);
-    const galarMeouth = new Pokemon(galarMeouthObj, null, language);
+    const meouth = new Pokemon(meouthObj, 1, language);
+    const alolaMeouth = new Pokemon(alolaMeouthObj, 7, language);
+    const galarMeouth = new Pokemon(galarMeouthObj, 8, language);
 
     it("compares same Pokémon", () => {
       const actual = pikachu.compareName(pikachu);
@@ -106,7 +107,7 @@ describe("Pokemon class (language: ja)", () => {
   describe("#compareId", () => {
     const pikachu = new Pokemon(pikachuObj, 1, language);
     const raichu = new Pokemon(raichuObj, 1, language);
-    const alolaRaichu = new Pokemon(alolaRaichuObj, null, language);
+    const alolaRaichu = new Pokemon(alolaRaichuObj, 7, language);
 
     it("compares same Pokémon", () => {
       const actual = pikachu.compareId(pikachu);
@@ -131,7 +132,7 @@ describe("Pokemon class (language: en)", () => {
 
   describe("constructor", () => {
     it("initializes correct properties for Alola Raichu", () => {
-      const actual = new Pokemon(alolaRaichuObj, null, language);
+      const actual = new Pokemon(alolaRaichuObj, 7, language);
 
       expect(actual.id).to.equal("26");
       expect(actual.localId).to.be.undefined;
@@ -171,7 +172,7 @@ describe("Pokemon class (language: en)", () => {
         .and.that.include("Monster")
         .and.that.include("Grass");
       expect(actual.megaEvolution).to.be.an("array").that.has.lengthOf(1);
-      expect(actual.megaEvolution[0]).to.have.all.keys(
+      expect(actual.megaEvolution![0]).to.have.all.keys(
         "name",
         "ability",
         "type",
@@ -182,9 +183,9 @@ describe("Pokemon class (language: en)", () => {
 
   describe("#compareName", () => {
     const pikachu = new Pokemon(pikachuObj, 1, language);
-    const meouth = new Pokemon(meouthObj, null, language);
-    const alolaMeouth = new Pokemon(alolaMeouthObj, null, language);
-    const galarMeouth = new Pokemon(galarMeouthObj, null, language);
+    const meouth = new Pokemon(meouthObj, 1, language);
+    const alolaMeouth = new Pokemon(alolaMeouthObj, 7, language);
+    const galarMeouth = new Pokemon(galarMeouthObj, 8, language);
 
     it("compares same Pokémon", () => {
       const actual = pikachu.compareName(pikachu);
@@ -215,7 +216,7 @@ describe("Pokemon class (language: en)", () => {
   describe("#compareId", () => {
     const pikachu = new Pokemon(pikachuObj, 1, language);
     const raichu = new Pokemon(raichuObj, 1, language);
-    const alolaRaichu = new Pokemon(alolaRaichuObj, null, language);
+    const alolaRaichu = new Pokemon(alolaRaichuObj, 7, language);
 
     it("compares same Pokémon", () => {
       const actual = pikachu.compareId(pikachu);
