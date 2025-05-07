@@ -286,15 +286,5 @@ describe("Pokedex class", () => {
       expect(actual[5].id).to.equal("958");
       expect(actual[6].id).to.equal("959");
     });
-
-    // it("throws exception for undefined operator of base stat total", () => {
-    //   expect(() => pokedex.baseStatTotal("a", 100)).to.throw(
-    //     "Invalid operator (a)."
-    //   );
-    // });
-
-    // it("throws exception for undefined sortKey", () => {
-    //   expect(() => pokedex.sort("a")).to.throw("Invalid sortKey (a).");
-    // });
   });
 });
