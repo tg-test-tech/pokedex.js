@@ -1,4 +1,4 @@
-const typeMap = new Map<string, string>([
+export const typeMap = new Map<string, string>([
   ["ノーマル", "Normal"],
   ["ほのお", "Fire"],
   ["みず", "Water"],

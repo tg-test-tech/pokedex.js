@@ -1,4 +1,4 @@
-const eggGroupMap = new Map<string, string>([
+export const eggGroupMap = new Map<string, string>([
   ["怪獣", "Monster"],
   ["ドラゴン", "Dragon"],
   ["鉱物", "Mineral"],

@@ -1,6 +1,6 @@
 import type { PokemonAbility, RawAbility } from "./types";
 
-const abilityMap: Map<string, string> = new Map<string, string>([
+export const abilityMap: Map<string, string> = new Map<string, string>([
   ["あくしゅう", "Stench"],
   ["あめふらし", "Drizzle"],
   ["かそく", "Speed Boost"],

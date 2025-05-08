@@ -9,7 +9,7 @@ import type {
   LocalId,
   MegaPokemonData,
   MegaPokemon as MegaPokemonType,
-  MegaPokemonMap
+  MegaPokemonMap,
 } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
