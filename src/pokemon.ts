@@ -25,7 +25,7 @@ export class Pokemon {
   eggGroup: string[];
   baseStats: Status;
   megaEvolution?: MegaPokemonType[];
-  generation: number;
+  generation?: number;
 
   constructor(pokemon: RawPokemonData, gen: number, lang: string) {
     this.id = pokemon.id;

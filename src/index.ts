@@ -17,7 +17,6 @@ const getAll = (lang: string): Pokemon[] => {
   const files = fs
     .readdirSync(resourcePath)
     .filter((file) => file.endsWith(".json") && !file.endsWith("_name.json"));
-  console.log(files);
 
   for (const file of files) {
     // Extract generation number from filename
